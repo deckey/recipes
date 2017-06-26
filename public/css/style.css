@@ -1,0 +1,16 @@
+body{
+  margin-top:2em;
+  background-color: #f9f9f9;
+}
+.panel-body h4{
+  font-weight: bold;
+}
+.panel-body p{
+  white-space: pre-line;
+}
+.panel-heading{
+  padding:0.2em 0.5em;
+}
+.btn-xs{
+  margin-right:0.25em;
+}

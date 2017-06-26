@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+  <head>
+    <title> Recipe book </title>
+    <link rel='stylesheet' href='/css/bootstrap.css'>
+    <link rel='stylesheet' href='/css/style.css'>
+  </head>
+
+  <body>
+    {+body /}
+    <script src='/js/jquery-3.2.1.min.js'></script>
+    <script src='/js/bootstrap.js'></script>
+    <script src='/js/bootstrap-flash-alert.js'></script>
+    <script src='/js/ui.js'></script>
+  </body>
+</html>
