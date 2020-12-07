@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: recipes-db
+  name: recipes-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: recipes-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: recipes-db
+    spec:
+      containers:
+      - name: recipes-db
+        envFrom:
+          - configMapRef:
+              name: env
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: dbaccess
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dbaccess
+                key: POSTGRES_PASSWORD
+
+        image: postgres:9.6.2-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: pg-data
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: pg-data
+        persistentVolumeClaim:
+          claimName: pg-data
+--- 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    service: recipes-db
+  name: pg-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: recipes-db
+  name: recipes-db
+spec:
+  ports:
+  - name: "db-port"
+    port: 5432
+    targetPort: 5432
+  selector:
+    service: recipes-db
