@@ -3,7 +3,7 @@ const db = require('../config/db');
 const app = express();
 
 //index route
-app.get('/', function (req, res, next) {
+app.get('/', function (req, res) {
   db.getRecipes(data => {
     return res.render('index', {
       recipes: data.rows
@@ -12,20 +12,22 @@ app.get('/', function (req, res, next) {
 })
 
 app.post('/add', (req, res) => {
-  db.addRecipe(req.body, (recipe) => {
-    res.redirect('/');
+  db.addRecipe(req.body, () => {
+    console.log("Recipe created: " + req.body.name);
+    console.log(req.body);
+    return res.redirect('/');
   })
 })
 
 app.post('/edit', (req, res) =>{
   db.updateRecipeById(req.body, recipe =>{
-    res.redirect('/');
+    return res.redirect('/');
   })
 })
 
 app.delete('/delete/:id', (req, res) => {
   db.deleteRecipe(req.params.id, (recipe) => {
-    res.sendStatus(200);
+    return res.sendStatus(200);
   })
 })
 
